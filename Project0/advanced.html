@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Search</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <ul>
+            <li><a href="index.html">Google Search</a></li>
+            <li><a href="image.html">Image Search</a></li>
+            <li><a href="advanced.html">Advanced Search</a></li>
+        </ul>
+        <div class="search-title">
+            <h1 style="color: red">Advanced OEM Search</h1>
+            <p>Find pages with</p>
+        </div>
+        <div class="advanced-container">
+            <form action="https://www.google.com/search" autocomplete="off" class="search">
+                <table>
+                    <tr>
+                        <td><label for="as_q">all these words</label></td>
+                        <td><input type="text" autocomplete="off" name="as_q" class="advanced-input"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="as_epq">this exact word or phrase</label></td>
+                        <td><input type="text" autocomplete="off" name="as_epq" class="advanced-input"></td>
+                    </tr>
+                    <tr></tr>
+                            <td><label for="as_oq">any of these words</label></td>
+                            <td><input type="text" autocomplete="off" name="as_oq" class="advanced-input"></td>
+                    <tr>
+                        <td><label for="as_eq">none of these words</label></td>
+                        <td><input type="text" autocomplete="off" name="as_eq" class="advanced-input"></td>
+                    </tr>
+                </table>
+                <input type="submit" value="Advanced Search" id="advanced-button">
+            </form>
+        </div>
+    </body>
+</html>
