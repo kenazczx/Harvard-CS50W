@@ -9,7 +9,8 @@
 {% block body %}
 {% if entry %}
 
-    {{ entry }}
+    {{ entry |safe }}<br>
+    <a href={% url 'encyclopedia:edit' title %}>Edit Entry</a>
 
 {% else %}
 

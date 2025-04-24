@@ -4,7 +4,8 @@ from django.http import HttpResponseRedirect
 from . import util
 from django.urls import reverse
 from django.contrib import messages
-
+import random
+import markdown2
 
 
 class CreatePageForm(forms.Form):
@@ -26,9 +27,11 @@ def index(request):
     })
 
 def title(request, title):
+    entry = util.get_entry(title)
+    html_content = markdown2.markdown(entry)
     return render(request, "encyclopedia/title.html", {
         "title": title,
-        "entry": util.get_entry(title)
+        "entry": html_content
     })
 
 def search(request):
@@ -74,3 +77,35 @@ def create(request):
     return render(request, "encyclopedia/create.html", {
         "form": CreatePageForm()
     })
+
+def edit(request, title):
+    entry = util.get_entry(title)
+
+    if entry == None:
+        messages.error(request, 'Page not found!')
+        return HttpResponseRedirect(reverse("encyclopedia:index"))
+    form = CreatePageForm(request.POST)
+    if request.method == "POST":
+        if form.is_valid():
+            updated_content = form.cleaned_data["entry_content"]
+            util.save_entry(title, updated_content)
+            messages.success(request, f'Entry "{title}" has been updated.')
+            return redirect("encyclopedia:title", title=title)
+    else:
+        form = CreatePageForm(initial={
+            "entry_name": title,
+            "entry_content": entry
+        })
+    return render(request, "encyclopedia/edit.html", {
+        "form": form,
+        "title": title
+    })
+
+def random_page(request):
+    entries = util.list_entries()
+    if entries:
+        random_title = random.choice(entries)
+        return redirect("encyclopedia:title", title=random_title)
+    else:
+        messages.error(request, 'No entries in encyclopedia!')
+        return HttpResponseRedirect(reverse("encyclopedia:index"))
