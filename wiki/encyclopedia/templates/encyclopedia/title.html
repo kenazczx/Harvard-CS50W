@@ -1,0 +1,21 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+
+{{ title }}
+
+{% endblock %}
+
+{% block body %}
+{% if entry %}
+
+    {{ entry }}
+
+{% else %}
+
+    Error: Requested word is not in Encyclopedia, Please add it!
+
+{% endif %}
+
+
+{% endblock %}

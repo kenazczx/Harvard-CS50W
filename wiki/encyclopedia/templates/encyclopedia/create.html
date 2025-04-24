@@ -1,0 +1,29 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+
+    Create New Page
+
+{% endblock %}
+
+{% block body %}
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="{{ form.entry_name.id_for_label }}">
+            {{ form.entry_name.label }}:
+        </label><br>
+        {{ form.entry_name }}
+    </div>
+    <div>
+        <label for="{{ form.entry_content.id_for_label }}">
+            {{ form.entry_content.label }}:
+        </label><br>
+        {{ form.entry_content }}
+    </div>   
+    
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock %}
