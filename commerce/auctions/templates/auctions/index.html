@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    <ol>
+        {% for auction in auctions %}
+            {% if auction.is_active %}
+                <li style="width: 100%;">
+                    <div style="display: flex; align-items: flex-start; width: 100%; margin-bottom: 20px;">
+                        <div style="flex-grow: 1;">
+                            <h4 style="margin: 0;">
+                                <a href="{% url 'listing' auction.id %}" style="text-decoration: none; color: blue;">
+                                    {{ auction.title }}
+                                </a>
+                            </h4>
+                            <ul>
+                                <li><strong>Description:</strong> {{ auction.description }}</li>
+                                <li><strong>Starting Bid:</strong> ${{ auction.starting_bid }}</li>
+                                <li><strong>Now Price:</strong> ${{ auction.final_price }}</li>
+                            </ul>
+                        </div>
+    
+                        {% if auction.image_url %}
+                            <img src="{{ auction.image_url }}" alt="{{ auction.title }}" style="width: 250px; border-radius: 8px; margin-left: 20px;">
+                        {% else %}
+                            <div style="width: 250px;"></div>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+    
+    
+    
+{% endblock %}

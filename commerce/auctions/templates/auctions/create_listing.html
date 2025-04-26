@@ -1,0 +1,42 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.title.id_for_label }}">
+                {{ form.title.label }}:
+            </label><br>
+            {{ form.title }}
+        </div>
+        <div>
+            <label for="{{ form.description.id_for_label }}">
+                {{ form.description.label }}:
+            </label><br>
+            {{ form.description }}
+        </div>
+        <div>
+            <label for="{{ form.starting_bid.id_for_label }}">
+                {{ form.starting_bid.label }}:
+            </label><br>
+            {{ form.starting_bid }}
+        </div>
+        <div>
+            <label for="{{ form.image_url.id_for_label }}">
+                {{ form.image_url.label }}:
+            </label><br>
+            {{ form.image_url }}
+        </div> 
+        <div>
+            <label for="{{ form.category.id_for_label }}">
+                {{ form.category.label }}:
+            </label><br>
+            {{ form.category }}
+        </div> 
+
+        <br>
+        <button type="submit" class="btn-primary btn">Submit</button>
+    </form>
+
+{% endblock %}

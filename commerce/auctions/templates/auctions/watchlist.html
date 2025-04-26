@@ -1,0 +1,32 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Current Watchlist</h2>
+
+    <ol>
+        {% for watchlist_item in watchlist %}
+                <li style="width: 100%;">
+                    <div style="display: flex; align-items: flex-start; width: 100%; margin-bottom: 20px;">
+                        <div style="flex-grow: 1;">
+                            <h4 style="margin: 0;">
+                                <a href="{% url 'listing' watchlist_item.id %}" style="text-decoration: none; color: blue;">
+                                    {{ watchlist_item.title }}
+                                </a>
+                            </h4>
+                            <ul>
+                                <li><strong>Description:</strong> {{ watchlist_item.description }}</li>
+                                <li><strong>Starting Bid:</strong> ${{ watchlist_item.starting_bid }}</li>
+                                <li><strong>Now Price:</strong> ${{ watchlist_item.final_price }}</li>
+                            </ul>
+                        </div>
+    
+                        {% if watchlist_item.image_url %}
+                            <img src="{{ watchlist_item.image_url }}" alt="{{ watchlist_item.title }}" style="width: 250px; border-radius: 8px; margin-left: 20px;">
+                        {% else %}
+                            <div style="width: 250px;"></div>
+                        {% endif %}
+                    </div>
+                </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

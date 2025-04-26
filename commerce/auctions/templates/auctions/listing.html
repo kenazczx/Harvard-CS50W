@@ -1,0 +1,72 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>{{ auction.title }} {% if auction in user.watchlist.all %}<span class="badge bg-secondary">Watchlist</span>{% endif %}</h1>
+    <form method="post" action="{% url 'manage_watchlist' auction.id %}">
+        {% csrf_token %}
+        {% if auction in user.watchlist.all %}
+        <input type="hidden" name="action" value="remove">
+        <button type="submit" class="btn-danger btn" style="margin-bottom: 10px;">Remove from Watchlist</button>
+        {% else %}
+        <input type="hidden" name="action" value="add">
+        <button type="submit" class="btn-primary btn" style="margin-bottom: 10px;">Add to Watchlist</button>
+        {% endif %}
+    </form>
+    {% if auction.is_active %}
+    {% if request.user == auction.owner %}
+    <form action="{% url 'close_auction' auction.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="Close Auction">
+    </form>
+    {% endif %}
+    {% else %}
+    <h3 style="color:red; text-decoration:underline;">Auction is closed and won by {{ auction.winner.username }}</h3>
+    {% endif %}
+    <br>
+    <div style="align-items: flex-start; display: flex; gap: 20px;">
+        <img src="{{ auction.image_url }}" alt="{{ auction.title }}" style="width: 500px; border-radius: 8px;">
+        <div>
+            <h2>Description</h2>
+            <p>{{ auction.description }}</p>
+        </div>
+    </div>
+    <h2 style="margin-top: 10px;">${{ auction.final_price }}</h2>
+    {% if user.is_authenticated %}
+    {% if auction.is_active %}
+    <form action="{% url 'bid' auction.id %}" method="post">
+        {% csrf_token %}
+        <div>
+            {{ form.bid_amount}}
+        </div>
+        <input type="submit" class="btn-primary btn" value="Place Bid" style="margin-top:10px;">
+    </form>
+    {% endif %}
+    {% endif %}
+    <h2 style="margin-top: 20px;">Details</h2>
+    <ul>
+        <li>Listed by <span style="color: blue;">{{ auction.owner }}</span></li>
+        {% if auction.category %}
+        <li>{{ auction.category }}</li>
+        {% else %}
+        <li>No categories listed</li>
+        {% endif %}
+        <li>Created on {{ auction.timestamp }}</li>
+    </ul>
+    <h2 style="margin-top: 10px;">Comments</h2>
+    <ul>
+    {% for comment in comments %}
+        <li>{{ comment.user.username }}: {{ comment.comment }}</li>
+    {% endfor %}
+    </ul>
+    {% if user.is_authenticated %}
+    <form action="{% url 'create_comment' auction.id %}" method="post">
+        {% csrf_token %}
+        <div>
+            {{ comment_form.comment }}
+        </div>
+        <input type="submit" value="Add Comment" class="btn-primary btn" style="margin-top: 10px;">
+
+    </form>
+    {% endif %}
+
+{% endblock %}
