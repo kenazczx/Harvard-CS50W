@@ -170,7 +170,8 @@ def bid(request, auction_id):
             current_price = auction.final_price
             
             if bid_amount <= current_price:
-                return HttpResponseRedirect(reverse("index"))
+                messages.error(request, "Bid amount is less than the current price! Bid Higher.")
+                return HttpResponseRedirect(reverse("listing", args=[auction.id]))
             
             Bids.objects.create(
                 amount=bid_amount,

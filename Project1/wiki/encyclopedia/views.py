@@ -28,18 +28,22 @@ def index(request):
 
 def title(request, title):
     entry = util.get_entry(title)
-    html_content = markdown2.markdown(entry)
-    return render(request, "encyclopedia/title.html", {
-        "title": title,
-        "entry": html_content
-    })
+    if entry:
+        html_content = markdown2.markdown(entry)
+        return render(request, "encyclopedia/title.html", {
+            "title": title,
+            "entry": html_content
+        })
+    else:
+        messages.error(request, 'Page requested does not exist')
+        return HttpResponseRedirect(reverse("encyclopedia:index"))
 
 def search(request):
     query = request.GET.get('q')
-    results = []
     if util.get_entry(query):
         return redirect(f'/wiki/{query}')
     else:
+        results = []
         entries = util.list_entries()
         for entry in entries:
             if query.lower() in entry.lower():

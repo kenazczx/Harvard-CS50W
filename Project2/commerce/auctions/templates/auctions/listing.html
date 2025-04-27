@@ -1,6 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if user.is_authenticated %}
     <h1>{{ auction.title }} {% if auction in user.watchlist.all %}<span class="badge bg-secondary">Watchlist</span>{% endif %}</h1>
     <form method="post" action="{% url 'manage_watchlist' auction.id %}">
         {% csrf_token %}
@@ -12,6 +13,7 @@
         <button type="submit" class="btn-primary btn" style="margin-bottom: 10px;">Add to Watchlist</button>
         {% endif %}
     </form>
+    {% endif %}
     {% if auction.is_active %}
     {% if request.user == auction.owner %}
     <form action="{% url 'close_auction' auction.id %}" method="post">
@@ -24,15 +26,15 @@
     {% endif %}
     <br>
     <div style="align-items: flex-start; display: flex; gap: 20px;">
-        <img src="{{ auction.image_url }}" alt="{{ auction.title }}" style="width: 500px; border-radius: 8px;">
+        {% if auction.image_url %}<img src="{{ auction.image_url }}" alt="{{ auction.title }}" style="width: 500px; border-radius: 8px;">{% endif %}
         <div>
             <h2>Description</h2>
             <p>{{ auction.description }}</p>
         </div>
     </div>
     <h2 style="margin-top: 10px;">${{ auction.final_price }}</h2>
-    {% if user.is_authenticated %}
     {% if auction.is_active %}
+    {% if user.is_authenticated %}
     <form action="{% url 'bid' auction.id %}" method="post">
         {% csrf_token %}
         <div>
@@ -40,6 +42,8 @@
         </div>
         <input type="submit" class="btn-primary btn" value="Place Bid" style="margin-top:10px;">
     </form>
+    {% else %}
+    <p style="color:red;">You must be logged in to place a bid.<p>
     {% endif %}
     {% endif %}
     <h2 style="margin-top: 20px;">Details</h2>
