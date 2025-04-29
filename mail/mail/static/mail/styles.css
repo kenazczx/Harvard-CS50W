@@ -1,3 +1,46 @@
 textarea {
     min-height: 400px;
 }
+.email-entry {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px; 
+}
+
+.email-subject {
+    padding-left: 50px;
+}
+
+
+#email-view {
+    display: none;
+}
+
+.archive-button {
+    margin-left: 50px;
+    margin-right:10px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: white;
+    color: #007bff;
+}
+
+.archive-button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#reply-button {
+    padding: 5px;
+    margin-top: 10px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: white;
+    color: #007bff;
+}
+
+#reply-button:hover {
+    background-color: #007bff;
+    color: white;
+}
