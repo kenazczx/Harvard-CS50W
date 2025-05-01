@@ -70,6 +70,7 @@ function load_mailbox(mailbox) {
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'none';
+  document.querySelector('#error-message').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -85,13 +86,22 @@ function send_mail(recipients, subject, body) {
       body: body
     })
   })
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(data => {
+        throw new Error(data.error || 'Failed to send email.');
+      })
+    }
+    return response.json()
+  })
   .then(result => {
-    // Print result
-    load_mailbox('sent');
+    load_mailbox('sent')
+    get_mail('sent');
   })
   .catch(error => {
-    console.error('Error during fetch', error);
+    const errorM = document.getElementById('error-message');
+    errorM.style.display = 'block';
+    errorM.innerHTML = error.message;
   });
 }
 
@@ -112,10 +122,18 @@ function get_mail(type) {
       }
       email_div.className = 'email-entry';
       email_div.id = `${email.id}`
-      email_div.innerHTML = `
-        <strong>${email.sender}</strong>  <strong class="email-subject">${email.subject}</strong> - ${email.body.slice(0, 50)}
-        <span class="email-right" style="float: right;">${email.timestamp}</span>
-      `;
+      if (email.read === true) {
+        email_div.style.backgroundColor = 'lightgrey';
+        email_div.innerHTML = `
+          <strong>${email.sender}</strong>  <strong class="email-subject">${email.subject}</strong> - ${email.body.slice(0, 50)}
+          <span class="email-right" style="float: right;">${email.timestamp}</span>
+        `;
+        } else {
+          email_div.innerHTML = `
+          <strong>${email.sender}</strong>  <strong class="email-subject">${email.subject}</strong> - ${email.body.slice(0, 50)}
+          <span class="email-right" style="float: right;">${email.timestamp}</span>
+          `;
+        }
       if (type === 'archive' || type === 'inbox') {
         email_div.querySelector('.email-right').appendChild(archive_button);
       }

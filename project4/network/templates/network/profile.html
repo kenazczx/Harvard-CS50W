@@ -1,0 +1,41 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div>
+        <h2>{{ username }}</h2>
+        {% if request.user != username and user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            {% if user_following %}
+                <input type="submit" class="btn btn-primary" value="Unfollow">
+            {% else %}
+                <input type="submit" class="btn btn-primary" value="Follow">
+        </form>
+            {% endif %}
+        {% endif %}
+        <p><strong>{{ posts.count }}</strong> posts  <strong>{{ followers }}</strong> followers  <strong>{{ following }}</strong> following</p>
+    </div>
+    {% for post in page_obj %}
+    <div class="post" data-post-id="{{ post.id }}">
+        <a href={% url 'profile' username=post.user %} style="text-decoration: none; font-size: 20px;">{{ post.user }}</a>
+        {% if request.user == post.user %}
+        <br><button class="btn-primary btn edit-button">Edit</button>
+        {% endif %}
+        <p class="post-text">{{ post.text }}</p>
+        <p style="color: grey;">{{ post.timestamp }}</p>
+        {% if user.is_authenticated %}<button class="like-button" style="border: none; background-color: white;"><i class ="{%if user in post.likes.all%} fa-solid {%else%} fa-regular{%endif%} fa-heart"></i></button>{% else %}<i class="fa-regular fa-heart"></i>{% endif %}<span class="like-count" style="padding-left: 2px;">{{ post.likes.count }}</span>
+    </div>
+    {% endfor %}
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous&nbsp;</a>
+        {% endif %}
+    
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">&nbsp;Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endblock %}

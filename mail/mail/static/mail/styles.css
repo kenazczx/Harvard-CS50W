@@ -44,3 +44,7 @@ textarea {
     background-color: #007bff;
     color: white;
 }
+
+#error-message {
+    display: none;
+}
